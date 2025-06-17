@@ -237,7 +237,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       // Temperatura grande do radiador no centro
                       Center(
                         child: Text(
-                          "50%",
+                          "60%",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 36,
