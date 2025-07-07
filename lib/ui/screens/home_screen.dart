@@ -1,4 +1,8 @@
+import 'package:feduca_app/ui/widgets/timer.dart';
 import 'package:flutter/material.dart';
+
+import '../widgets/dia_mes.dart';
+import '../widgets/dia_semana.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -38,6 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
+              SizedBox(width: 20,),
               Container(
                 width: 250,
                 height: 340,
@@ -56,16 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment
                             .stretch, // Faz o texto ocupar toda a largura
                         children: [
-                          Text(
-                            "NW 10:18 P",
-                            textAlign: TextAlign.center, // Centraliza o texto horizontalmente
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'monospace',
-                            ),
-                          ),
+                          TimerBr(),
                           const SizedBox(
                             height: 8, // Espaço entre o texto e a linha
                           ),
@@ -266,23 +262,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                "Friday",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                  fontFamily: 'monospace',
-                                ),
-                              ),
-                              Text(
-                                "18",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'monospace',
-                                ),
-                              ),
+                              DiaSemanaWidget(),
+                              DiaDoMesWidget()
                             ],
                           ),
 
@@ -314,6 +295,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
+              SizedBox(width: 20,),
               Expanded(
                 child: Align(
                   alignment: Alignment.centerRight,
