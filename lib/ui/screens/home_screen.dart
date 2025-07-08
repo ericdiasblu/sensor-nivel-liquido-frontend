@@ -1,311 +1,77 @@
-import 'package:feduca_app/ui/widgets/timer.dart';
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 
-import '../widgets/dia_mes.dart';
-import '../widgets/dia_semana.dart';
-
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
+void main() {
+  runApp(MaterialApp(
+    home: CarDashboard(),
+    debugShowCheckedModeBanner: false,
+    theme: ThemeData.dark(),
+  ));
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class CarDashboard extends StatefulWidget {
+  @override
+  _CarDashboardState createState() => _CarDashboardState();
+}
+
+class _CarDashboardState extends State<CarDashboard> with TickerProviderStateMixin {
+  late AnimationController _pulseController;
+
+  // Valores iniciais para demonstração
+  double speed = 180.0;
+  double temperature = 90.0;
+  double batteryLevel = 85;
+  double fluidLevel = 60;
+
+  @override
+  void initState() {
+    super.initState();
+    _pulseController = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _pulseController.dispose();
+    super.dispose();
+  }
+
+  // Funções para atualizar o estado (usado pelos Sliders de demo)
+  void _updateState(Function() update) {
+    setState(update);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: const Color(0xFF0A0A0A),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: RadialGradient(
             center: Alignment.center,
-            radius: 1.5,
-            colors: [Colors.black, Colors.grey[900]!, Colors.black],
+            radius: 1.2,
+            colors: [Color(0xFF1A1A1A), Color(0xFF0A0A0A)],
           ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.only(left: 30, right: 30),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+        child: SafeArea(
+          child: Column(
             children: [
+              _buildHeader(),
               Expanded(
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    width: 600,
-                    height: 600,
-                    child: Image.asset(
-                      'assets/fuel-image.png',
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(width: 20,),
-              Container(
-                width: 250,
-                height: 340,
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  border: Border.all(color: Colors.grey[800]!, width: 5),
-                  borderRadius: BorderRadius.circular(8),
-                ),
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // Linha superior - Horário e indicadores
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment
-                            .stretch, // Faz o texto ocupar toda a largura
-                        children: [
-                          TimerBr(),
-                          const SizedBox(
-                            height: 8, // Espaço entre o texto e a linha
-                          ),
-                          Divider(
-                            color: const Color.fromARGB(255, 255, 255, 255), // Cor da linha
-                            thickness: 2, // Espessura da linha
-                          ),
-                        ],
-                      ),
-
-                      SizedBox(height: 12),
-
-                      // Indicador de sinal
-                      Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              // Primeira barra (mais baixa)
-                              Container(
-                                width: 3,
-                                height: 6,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(0.5),
-                                ),
-                              ),
-                              SizedBox(width: 1),
-
-                              // Segunda barra
-                              Container(
-                                width: 3,
-                                height: 9,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(0.5),
-                                ),
-                              ),
-                              SizedBox(width: 1),
-
-                              // Terceira barra
-                              Container(
-                                width: 3,
-                                height: 12,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(0.5),
-                                ),
-                              ),
-                              SizedBox(width: 1),
-
-                              // Quarta barra (mais alta)
-                              Container(
-                                width: 3,
-                                height: 15,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(0.5),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Text(
-                            "iPhone",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontFamily: 'monospace',
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      SizedBox(height: 20),
-
-                      // Ícones centrais
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          // Ícone de bateria
-                          Container(
-                            width: 20,
-                            height: 10,
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.white, width: 1),
-                              borderRadius: BorderRadius.circular(2),
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 7,
-                                  child: Container(
-                                    margin: EdgeInsets.all(1),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(1),
-                                    ),
-                                  ),
-                                ),
-                                Expanded(flex: 3, child: Container()),
-                              ],
-                            ),
-                          ),
-
-                          SizedBox(width: 20),
-
-                          // Ícone de termômetro
-                          Container(
-                            width: 12,
-                            height: 30,
-                            child: Column(
-                              children: [
-                                Container(
-                                  width: 8,
-                                  height: 20,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.white,
-                                      width: 1,
-                                    ),
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  child: Container(
-                                    margin: EdgeInsets.all(1),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(2),
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  width: 12,
-                                  height: 10,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    shape: BoxShape.circle,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          SizedBox(width: 20),
-
-                          // Terceiro ícone
-                          Container(
-                            width: 16,
-                            height: 16,
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.white, width: 2),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      const SizedBox(
-                        height: 5,
-                      ), // Espaço entre o texto e a linha
-                      Divider(
-                        color: const Color.fromARGB(
-                          255,
-                          255,
-                          255,
-                          255,
-                        ), // Cor da linha
-                        thickness: 2, // Espessura da linha
-                      ),
-                      // Temperatura grande do radiador no centro
-                      Center(
-                        child: Text(
-                          "60%",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 36,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'monospace',
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(
-                        height: 5,
-                      ), // Espaço entre o texto e a linha
-                      Divider(
-                        color: const Color.fromARGB(
-                          255,
-                          255,
-                          255,
-                          255,
-                        ), // Cor da linha
-                        thickness: 2, // Espessura da linha
-                      ),
-                      // Linha inferior com informações
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              DiaSemanaWidget(),
-                              DiaDoMesWidget()
-                            ],
-                          ),
-
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                "High",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                  fontFamily: 'monospace',
-                                ),
-                              ),
-                              Text(
-                                "10.1",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'monospace',
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                      // Velocímetro (esquerda)
+                      Expanded(child: _buildSpeedometer()),
+                      // Display central
+                      _buildCentralDisplay(),
+                      // Termostato (direita)
+                      Expanded(child: _buildThermometer()),
                     ],
-                  ),
-                ),
-              ),
-              SizedBox(width: 20,),
-              Expanded(
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: Container(
-                    width: 600,
-                    height: 600,
-                    child: Image.asset(
-                      'assets/km-image.png',
-                      fit: BoxFit.contain,
-                    ),
                   ),
                 ),
               ),
@@ -314,5 +80,354 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  Widget _buildHeader() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildStatusIndicator('ENGINE', true),
+          const Text(
+            'TESLA MODEL S',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 2,
+            ),
+          ),
+          _buildStatusIndicator('AUTOPILOT', false),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSpeedometer() {
+    // Usamos TweenAnimationBuilder para animar a mudança de valor suavemente
+    return TweenAnimationBuilder<double>(
+      tween: Tween<double>(begin: 0, end: speed),
+      duration: const Duration(milliseconds: 1000),
+      curve: Curves.easeInOut,
+      builder: (context, animatedSpeed, child) {
+        return CustomPaint(
+          painter: AnalogGaugePainter(
+            value: animatedSpeed,
+            maxValue: 240,
+            unitLabel: 'km/h',
+            needleColor: const Color(0xFF00D4FF),
+            startAngle: 140, // Ângulo inicial em graus
+            sweepAngle: 260, // Extensão total do medidor em graus
+            divisions: 12,
+            subdivisions: 5,
+          ),
+          // O child do CustomPaint é desenhado no centro
+          child: child,
+        );
+      },
+      child: const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(
+              'SPEED',
+              style: TextStyle(
+                color: Color(0xFF00D4FF),
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            SizedBox(height: 40), // Espaço para o ponteiro não cobrir o texto
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildThermometer() {
+    return TweenAnimationBuilder<double>(
+      tween: Tween<double>(begin: 0, end: temperature),
+      duration: const Duration(milliseconds: 1000),
+      curve: Curves.easeInOut,
+      builder: (context, animatedTemp, child) {
+        // Interpola a cor do ponteiro com base na temperatura
+        final tempColor = Color.lerp(
+            Colors.cyan, Colors.red, (animatedTemp / 200).clamp(0.0, 1.0))!;
+            
+        return CustomPaint(
+          painter: AnalogGaugePainter(
+            value: animatedTemp,
+            maxValue: 200,
+            unitLabel: '°C',
+            needleColor: tempColor,
+            startAngle: 140,
+            sweepAngle: 260,
+            divisions: 10,
+            subdivisions: 5,
+          ),
+          child: child,
+        );
+      },
+      child: const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(
+              'TEMP',
+              style: TextStyle(
+                color: Colors.redAccent,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            SizedBox(height: 40),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCentralDisplay() {
+    return Container(
+      width: 130, // Largura ajustada
+      height: 255, // Altura ajustada
+      margin: const EdgeInsets.symmetric(horizontal: 4),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1E1E1E),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFF00D4FF), width: 2),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF00D4FF).withOpacity(0.3),
+            blurRadius: 15,
+            spreadRadius: 2,
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _buildCentralInfo(
+              'BATTERY', '${batteryLevel.toInt()}%', Icons.battery_charging_full),
+          const Divider(color: Color(0xFF333333), thickness: 1, indent: 10, endIndent: 10),
+          _buildCentralInfo(
+              'FLUID', '${fluidLevel.toInt()}%', Icons.opacity),
+          const Divider(color: Color(0xFF333333), thickness: 1, indent: 10, endIndent: 10),
+          _buildCentralInfo('RANGE', '420 km', Icons.route),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCentralInfo(String label, String value, IconData icon) {
+    return Column(
+      children: [
+        Icon(icon, color: const Color(0xFF00D4FF), size: 24),
+        const SizedBox(height: 6),
+        Text(label,
+            style: const TextStyle(color: Color(0xFF888888), fontSize: 11)),
+        const SizedBox(height: 4),
+        Text(value,
+            style:
+                const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+      ],
+    );
+  }
+
+  Widget _buildStatusIndicator(String label, bool isActive) {
+    return AnimatedBuilder(
+      animation: _pulseController,
+      builder: (context, child) {
+        return Column(
+          children: [
+            Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(
+                color: isActive ? const Color(0xFF00FF88) : const Color(0xFF444444),
+                shape: BoxShape.circle,
+                boxShadow: isActive
+                    ? [
+                        BoxShadow(
+                          color: const Color(0xFF00FF88).withOpacity(0.7 * _pulseController.value),
+                          blurRadius: 8,
+                          spreadRadius: 3,
+                        ),
+                      ]
+                    : null,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: TextStyle(
+                color: isActive ? const Color(0xFF00FF88) : const Color(0xFF666666),
+                fontSize: 10,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+  
+  Widget _buildDemoSliders() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8),
+      color: Colors.black.withOpacity(0.3),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(children: [
+            const Text("Speed", style: TextStyle(color: Colors.white)),
+            Expanded(child: Slider(value: speed, min: 0, max: 240, onChanged: (v) => _updateState(() => speed = v), activeColor: const Color(0xFF00D4FF))),
+            Text(speed.toInt().toString(), style: const TextStyle(color: Color(0xFF00D4FF), fontWeight: FontWeight.bold)),
+          ]),
+          Row(children: [
+            const Text("Temp ", style: TextStyle(color: Colors.white)),
+            Expanded(child: Slider(value: temperature, min: 0, max: 200, onChanged: (v) => _updateState(() => temperature = v), activeColor: Colors.redAccent)),
+            Text(temperature.toInt().toString(), style: const TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold)),
+          ]),
+        ],
+      ),
+    );
+  }
+}
+
+/// Um CustomPainter genérico para desenhar medidores analógicos com ponteiro.
+class AnalogGaugePainter extends CustomPainter {
+  final double value;
+  final double maxValue;
+  final String unitLabel;
+  final Color needleColor;
+  final double startAngle;
+  final double sweepAngle;
+  final int divisions;
+  final int subdivisions;
+
+  AnalogGaugePainter({
+    required this.value,
+    required this.maxValue,
+    this.unitLabel = '',
+    this.needleColor = Colors.red,
+    this.startAngle = 135,
+    this.sweepAngle = 270,
+    this.divisions = 10,
+    this.subdivisions = 5,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = math.min(size.width, size.height) / 2 - 10;
+    
+    // Converte ângulos de graus para radianos
+    final startRad = startAngle * math.pi / 180;
+    final sweepRad = sweepAngle * math.pi / 180;
+
+    // Desenha as marcas e os números
+    _drawMarkings(canvas, center, radius, startRad, sweepRad);
+
+    // Desenha o ponteiro
+    _drawNeedle(canvas, center, radius, value, startRad, sweepRad);
+    
+    // Desenha o pino central
+    _drawCenterPin(canvas, center);
+  }
+
+  void _drawMarkings(Canvas canvas, Offset center, double radius, double startRad, double sweepRad) {
+    final paint = Paint()
+      ..strokeCap = StrokeCap.round;
+
+    final totalTicks = divisions * subdivisions;
+    for (int i = 0; i <= totalTicks; i++) {
+      final angle = startRad + (i / totalTicks) * sweepRad;
+      
+      final isDivision = i % subdivisions == 0;
+      final tickLength = isDivision ? 15.0 : 7.0;
+      final strokeWidth = isDivision ? 2.5 : 1.5;
+      
+      final p1 = Offset(
+        center.dx + (radius - tickLength) * math.cos(angle),
+        center.dy + (radius - tickLength) * math.sin(angle),
+      );
+      final p2 = Offset(
+        center.dx + radius * math.cos(angle),
+        center.dy + radius * math.sin(angle),
+      );
+
+      paint
+        ..color = isDivision ? Colors.white : Colors.grey[600]!
+        ..strokeWidth = strokeWidth;
+
+      canvas.drawLine(p1, p2, paint);
+
+      // Desenha os números das divisões principais
+      if (isDivision) {
+        final textValue = (i / totalTicks * maxValue).toInt().toString();
+        final textPainter = TextPainter(
+          text: TextSpan(text: textValue, style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
+          textDirection: TextDirection.ltr,
+        );
+        textPainter.layout();
+        
+        final textAngle = angle;
+        final textOffset = Offset(
+          center.dx + (radius - tickLength - 15) * math.cos(textAngle) - textPainter.width / 2,
+          center.dy + (radius - tickLength - 15) * math.sin(textAngle) - textPainter.height / 2,
+        );
+        textPainter.paint(canvas, textOffset);
+      }
+    }
+  }
+
+  void _drawNeedle(Canvas canvas, Offset center, double radius, double value, double startRad, double sweepRad) {
+    final valueRatio = (value / maxValue).clamp(0.0, 1.0);
+    final needleAngle = startRad + valueRatio * sweepRad;
+    
+    final needlePaint = Paint()
+      ..color = needleColor
+      ..style = PaintingStyle.fill;
+      
+    final shadowPaint = Paint()
+      ..color = Colors.black.withOpacity(0.5)
+      ..style = PaintingStyle.fill
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3);
+      
+    // O Path define a forma do ponteiro
+    final needlePath = Path()
+      ..moveTo(0, -5) // Base do ponteiro
+      ..lineTo(radius - 10, 0) // Ponta do ponteiro
+      ..lineTo(0, 5) // Outro lado da base
+      ..lineTo(-20, 0) // Cauda do ponteiro
+      ..close();
+
+    canvas.save();
+    // Move a origem do canvas para o centro do medidor
+    canvas.translate(center.dx, center.dy);
+    // Gira o canvas para o ângulo correto
+    canvas.rotate(needleAngle);
+
+    // Desenha a sombra e depois o ponteiro
+    canvas.drawPath(needlePath.shift(const Offset(2, 2)), shadowPaint);
+    canvas.drawPath(needlePath, needlePaint);
+
+    // Restaura o estado anterior do canvas (sem rotação e translação)
+    canvas.restore();
+  }
+  
+  void _drawCenterPin(Canvas canvas, Offset center){
+     // Círculo central (pino do ponteiro)
+    canvas.drawCircle(center, 12, Paint()..color = const Color(0xFF333333));
+    canvas.drawCircle(center, 8, Paint()..color = needleColor.withOpacity(0.8));
+    canvas.drawCircle(center, 4, Paint()..color = Colors.white);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    // Repinta apenas se o valor mudar para otimizar o desempenho
+    return (oldDelegate as AnalogGaugePainter).value != value;
   }
 }

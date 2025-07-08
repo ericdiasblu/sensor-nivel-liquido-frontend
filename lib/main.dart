@@ -20,7 +20,7 @@ void main() async {
 
   runApp(
       MaterialApp(
-        home: HomeScreen(),
+        home: CarDashboard(),
         debugShowCheckedModeBanner: false,
       )
   );
