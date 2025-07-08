@@ -89,15 +89,6 @@ class _CarDashboardState extends State<CarDashboard> with TickerProviderStateMix
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _buildStatusIndicator('ENGINE', true),
-          const Text(
-            'TESLA MODEL S',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 2,
-            ),
-          ),
           _buildStatusIndicator('AUTOPILOT', false),
         ],
       ),
