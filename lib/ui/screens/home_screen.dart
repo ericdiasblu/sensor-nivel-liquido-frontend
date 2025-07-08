@@ -204,8 +204,8 @@ class _CarDashboardState extends State<CarDashboard> with TickerProviderStateMix
           const Divider(color: Color(0xFF333333), thickness: 1, indent: 10, endIndent: 10),
           _buildCentralInfo(
               'FLUID', '${fluidLevel.toInt()}%', Icons.opacity),
-          const Divider(color: Color(0xFF333333), thickness: 1, indent: 10, endIndent: 10),
-          _buildCentralInfo('RANGE', '420 km', Icons.route),
+          /*const Divider(color: Color(0xFF333333), thickness: 1, indent: 10, endIndent: 10),
+          _buildCentralInfo('RANGE', '420 km', Icons.route),*/
         ],
       ),
     );
